@@ -29,21 +29,23 @@ const upload = multer({
 });
 
 // Upload Resource (Rep only)
-router.post('/', auth, checkRole('rep'), upload.single('pdf'), async (req, res) => {
+router.post('/', auth, checkRole('rep'), upload.array('pdf', 10), async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).send({ error: 'Please upload a PDF file' });
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).send({ error: 'Please upload at least one PDF file' });
         }
 
-        const resource = new Resource({
-            courseName: req.body.courseName,
-            fileName: req.file.originalname,
-            filePath: req.file.path,
-            uploadedBy: req.user.id
-        });
+        const resources = await Promise.all(req.files.map(async (file) => {
+            const resource = new Resource({
+                courseName: req.body.courseName,
+                fileName: file.originalname,
+                filePath: file.path,
+                uploadedBy: req.user.id
+            });
+            return await resource.save();
+        }));
 
-        await resource.save();
-        res.status(201).send(resource);
+        res.status(201).send(resources);
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
