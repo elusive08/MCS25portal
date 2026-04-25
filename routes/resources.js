@@ -30,8 +30,7 @@ const storage = new CloudinaryStorage({
     params: async (req, file) => {
         return {
             folder: 'resources',
-            format: 'pdf', // Force format to pdf
-            resource_type: 'raw', // Required for PDFs to be handled as raw files
+            resource_type: 'image', // Best for PDFs in Cloudinary
             public_id: path.parse(file.originalname).name + '-' + Date.now()
         };
     }
@@ -60,6 +59,7 @@ router.post('/', auth, checkRole('rep'), upload.array('pdf', 10), async (req, re
                 courseName: req.body.courseName,
                 fileName: file.originalname,
                 filePath: file.path, // Cloudinary URL
+                resourceType: 'image', // New uploads use 'image'
                 cloudinaryId: file.filename, // Cloudinary Public ID
                 uploadedBy: req.user.id
             });
@@ -93,7 +93,9 @@ router.delete('/:id', auth, checkRole('rep'), async (req, res) => {
 
         // Delete from Cloudinary
         if (resource.cloudinaryId) {
-            await cloudinary.uploader.destroy(resource.cloudinaryId, { resource_type: 'raw' });
+            await cloudinary.uploader.destroy(resource.cloudinaryId, { 
+                resource_type: resource.resourceType || 'raw' 
+            });
         }
 
         await Resource.findByIdAndDelete(req.params.id);

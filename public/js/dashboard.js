@@ -81,7 +81,7 @@ async function loadResources() {
                 </div>
                 <p>File: ${item.fileName}</p>
                 <div class="meta">Uploaded by ${item.uploadedBy ? item.uploadedBy.name : 'Unknown User'}</div>
-                <a href="${item.filePath}" target="_blank" class="download-btn">Download PDF</a>
+                <a href="${item.filePath}" target="_blank" download="${item.fileName}" class="download-btn">Download PDF</a>
             </div>
         `).join('') : '<p>No resources available yet.</p>';
     } catch (err) {

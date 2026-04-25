@@ -14,6 +14,10 @@ const resourceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    resourceType: {
+        type: String,
+        default: 'raw'
+    },
     cloudinaryId: {
         type: String
     },
