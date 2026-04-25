@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - Dept Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo"><a href="index.html" style="color: white; text-decoration: none;">Dept Portal</a></div>
+            <ul id="nav-links">
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="auth-form">
+            <h2>Signup</h2>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Use secret password for Rep role" required>
+                </div>
+                <button type="submit">Signup</button>
+            </form>
+            <p style="text-align:center; margin-top:1rem">Already have an account? <a href="login.html">Login</a></p>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

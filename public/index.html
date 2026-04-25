@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dept Portal - Welcome</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Dept Portal</div>
+            <ul id="nav-links">
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Signup</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div style="text-align: center; margin-top: 5rem;">
+            <h1>Welcome to the Department Portal</h1>
+            <p>Access department news and course materials easily.</p>
+            <div style="margin-top: 2rem;">
+                <a href="login.html" class="download-btn" style="background: #3498db; padding: 1rem 2rem;">Get Started</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Redirect if already logged in
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            window.location.href = user.role === 'rep' ? 'rep-dashboard.html' : 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Dept Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Dept Portal</div>
+            <ul id="nav-links">
+                <li><a id="welcome-msg"></a></li>
+                <li><a onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-grid">
+            <section id="sidebar">
+                <h3>Quick Info</h3>
+                <p>Welcome to your student portal. Here you can find the latest department updates and download course materials.</p>
+            </section>
+            <section>
+                <div id="news-section">
+                    <h2>Latest News</h2>
+                    <div id="news-list">Loading news...</div>
+                </div>
+                <div id="resources-section" style="margin-top:2rem">
+                    <h2>Course Materials (PDFs)</h2>
+                    <div id="resources-list">Loading resources...</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
