@@ -10,6 +10,12 @@ const newsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    imageUrl: {
+        type: String
+    },
+    cloudinaryId: {
+        type: String
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

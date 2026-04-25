@@ -57,6 +57,7 @@ async function loadNews() {
                     <h3>${item.title}</h3>
                     ${user.role === 'rep' ? `<button onclick="deleteNews('${item._id}')" style="width:auto; padding:0.3rem 0.6rem; background:#e74c3c; font-size:0.8rem;">Delete</button>` : ''}
                 </div>
+                ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.title}" style="max-width:100%; height:auto; border-radius:8px; margin: 10px 0;">` : ''}
                 <p>${item.content}</p>
                 <div class="meta">By ${item.author ? item.author.name : 'Unknown User'} on ${new Date(item.createdAt).toLocaleDateString()}</div>
             </div>
@@ -80,7 +81,7 @@ async function loadResources() {
                 </div>
                 <p>File: ${item.fileName}</p>
                 <div class="meta">Uploaded by ${item.uploadedBy ? item.uploadedBy.name : 'Unknown User'}</div>
-                <a href="/${item.filePath}" target="_blank" class="download-btn">Download PDF</a>
+                <a href="${item.filePath}" target="_blank" class="download-btn">Download PDF</a>
             </div>
         `).join('') : '<p>No resources available yet.</p>';
     } catch (err) {
@@ -114,13 +115,21 @@ if (postNewsForm) {
     postNewsForm.onsubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const body = Object.fromEntries(formData);
         try {
-            await api('/news', { method: 'POST', body: JSON.stringify(body) });
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Posting...';
+
+            await api('/news', { method: 'POST', body: formData });
+            
             e.target.reset();
             await loadNews();
         } catch (err) {
             alert(err.message);
+        } finally {
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Post News';
         }
     };
 }
