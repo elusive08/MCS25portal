@@ -21,14 +21,21 @@ const newsRoutes = require('./routes/news');
 const resourceRoutes = require('./routes/resources');
 
 // Middleware
-const allowedOrigins = ['https://mcs-25.vercel.app', 'http://localhost:5000', 'http://localhost:3000', 'http://127.0.0.1:5000'];
+const allowedOrigins = [
+    'https://mcs29.onrender.com',
+    'https://mcs-25.vercel.app',
+    'http://localhost:5000',
+    'http://localhost:3000',
+    'http://127.0.0.1:5000'
+];
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
         
         const isAllowed = allowedOrigins.includes(origin) || 
-                         (origin.endsWith('.vercel.app') && origin.includes('mcs-25'));
+                         (origin.endsWith('.vercel.app') && origin.includes('mcs-25')) ||
+                         (origin.endsWith('.onrender.com') && origin.includes('mcs29'));
         
         if (!isAllowed) {
             const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
@@ -68,11 +75,6 @@ app.use((err, req, res, next) => {
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Could not connect to MongoDB:', err));
-
-// Basic Route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // Start Server
 const PORT = process.env.PORT || 5000;
