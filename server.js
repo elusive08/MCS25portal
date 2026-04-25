@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 // Load environment variables
 dotenv.config();
@@ -50,6 +51,12 @@ app.use(cors({
 app.use(express.json());
 const publicPath = path.resolve(__dirname, 'public');
 const uploadsPath = path.resolve(__dirname, 'uploads');
+
+// Ensure uploads directory exists
+if (!fs.existsSync(uploadsPath)) {
+    fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
 app.use(express.static(publicPath));
 app.use('/uploads', express.static(uploadsPath));
 
