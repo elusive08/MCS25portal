@@ -62,6 +62,12 @@ async function loadNews() {
                 <div class="meta">By ${item.author ? item.author.name : 'Unknown User'} on ${new Date(item.createdAt).toLocaleDateString()}</div>
             </div>
         `).join('') : '<p>No news updates yet.</p>';
+        
+        // Add stagger effect to cards
+        const cards = newsList.querySelectorAll('.news-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
     } catch (err) {
         console.error(err);
     }
@@ -75,15 +81,26 @@ async function loadResources() {
         if (!resourcesList) return;
         resourcesList.innerHTML = resources.length ? resources.map(item => `
             <div class="resource-card">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
-                    <h3>${item.courseName}</h3>
-                    ${user.role === 'rep' ? `<button onclick="deleteResource('${item._id}')" style="width:auto; padding:0.3rem 0.6rem; background:#e74c3c; font-size:0.8rem;">Delete</button>` : ''}
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom: 1rem;">
+                    <h3 style="margin-bottom:0;">${item.courseName}</h3>
+                    ${user.role === 'rep' ? `<button onclick="deleteResource('${item._id}')" style="width:auto; padding:0.4rem 0.8rem; background:#ef4444; font-size:0.8rem; border-radius:6px;">Delete</button>` : ''}
                 </div>
-                <p>File: ${item.fileName}</p>
+                <p style="margin-bottom: 0.5rem; font-weight: 500;">${item.fileName}</p>
                 <div class="meta">Uploaded by ${item.uploadedBy ? item.uploadedBy.name : 'Unknown User'}</div>
-                <a href="${item.filePath}" target="_blank" download="${item.fileName}" class="download-btn">Download PDF</a>
+                <a href="${item.filePath}" target="_blank" download="${item.fileName}" class="download-btn">
+                    <svg style="width:18px; height:18px; margin-right:8px; fill:currentColor" viewBox="0 0 24 24">
+                        <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+                    </svg>
+                    Download PDF
+                </a>
             </div>
         `).join('') : '<p>No resources available yet.</p>';
+
+        // Add stagger effect to cards
+        const cards = resourcesList.querySelectorAll('.resource-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
     } catch (err) {
         console.error(err);
     }
