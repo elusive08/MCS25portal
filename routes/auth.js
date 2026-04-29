@@ -17,10 +17,6 @@ router.post('/signup', async (req, res) => {
         } else if (password === 'rep/25/1010') {
             role = 'rep';
         } else {
-            const studentPasswordRegex = /^mcs\/25\/\d{4}$/;
-            if (!studentPasswordRegex.test(password)) {
-                return res.status(400).send({ error: 'Student password must be in the format mcs/25/XXXX (e.g., mcs/25/1234)' });
-            }
             role = 'student';
         }
 
