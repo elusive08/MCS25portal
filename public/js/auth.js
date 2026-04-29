@@ -65,12 +65,9 @@ if (signupForm) {
         
         if (dataObj.password === 'rep/25/1010') {
             dataObj.role = 'rep';
+        } else if (dataObj.password === 'admin/25/1010') {
+            dataObj.role = 'admin';
         } else {
-            const studentPasswordRegex = /^mcs\/25\/\d{4}$/;
-            if (!studentPasswordRegex.test(dataObj.password)) {
-                alert('Student password must be in the format mcs/25/XXXX (e.g., mcs/25/1234)');
-                return;
-            }
             dataObj.role = 'student';
         }
 
