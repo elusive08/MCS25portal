@@ -18,7 +18,7 @@ const resourceSchema = new mongoose.Schema({
         type: String,
         default: 'raw'
     },
-    cloudinaryId: {
+    fileKey: {
         type: String
     },
     uploadedBy: {

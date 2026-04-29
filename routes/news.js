@@ -1,36 +1,37 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const News = require('../models/News');
 const { auth, checkRole } = require('../middleware/auth');
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const router = express.Router();
 
-// Cloudinary configuration
-const isCloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
-                               process.env.CLOUDINARY_API_KEY && 
-                               process.env.CLOUDINARY_API_SECRET;
-
-if (isCloudinaryConfigured) {
-    cloudinary.config({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_API_SECRET
-    });
-}
-
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: 'news_images',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-        transformation: [{ width: 800, height: 600, crop: 'limit' }]
+// Multer configuration for local storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = 'uploads/';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Only JPEG, PNG and WebP are allowed.'));
+        }
+    }
+});
 
 // Create News (Rep only)
 router.post('/', auth, checkRole('rep'), upload.single('image'), async (req, res) => {
@@ -42,8 +43,7 @@ router.post('/', auth, checkRole('rep'), upload.single('image'), async (req, res
         };
 
         if (req.file) {
-            newsData.imageUrl = req.file.path;
-            newsData.cloudinaryId = req.file.filename;
+            newsData.imageUrl = req.file.path; // Local path
         }
 
         const news = new News(newsData);
@@ -73,9 +73,9 @@ router.delete('/:id', auth, checkRole('rep'), async (req, res) => {
             return res.status(404).send({ error: 'News not found or unauthorized' });
         }
 
-        // Delete image from Cloudinary if it exists
-        if (news.cloudinaryId) {
-            await cloudinary.uploader.destroy(news.cloudinaryId);
+        // Delete image from local storage if it exists
+        if (news.imageUrl && fs.existsSync(news.imageUrl)) {
+            fs.unlinkSync(news.imageUrl);
         }
 
         await News.findByIdAndDelete(req.params.id);

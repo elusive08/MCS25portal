@@ -13,7 +13,7 @@ const newsSchema = new mongoose.Schema({
     imageUrl: {
         type: String
     },
-    cloudinaryId: {
+    fileKey: {
         type: String
     },
     author: {

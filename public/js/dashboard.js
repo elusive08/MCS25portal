@@ -8,6 +8,11 @@ if (!token || !user) {
 // Display welcome message
 document.getElementById('welcome-msg').innerText = `Welcome, ${user.name} (${user.role})`;
 
+if (user.role === 'admin') {
+    const adminVoteLink = document.getElementById('admin-vote-link');
+    if (adminVoteLink) adminVoteLink.style.display = 'block';
+}
+
 async function api(endpoint, options = {}) {
     const url = `/api${endpoint}`;
     console.log(`Fetching: ${url}`);
@@ -57,7 +62,7 @@ async function loadNews() {
                     <h3>${item.title}</h3>
                     ${user.role === 'rep' ? `<button onclick="deleteNews('${item._id}')" style="width:auto; padding:0.3rem 0.6rem; background:#e74c3c; font-size:0.8rem;">Delete</button>` : ''}
                 </div>
-                ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.title}" style="max-width:100%; height:auto; border-radius:8px; margin: 10px 0;">` : ''}
+                ${item.imageUrl ? `<img src="/${item.imageUrl}" alt="${item.title}" style="max-width:100%; height:auto; border-radius:8px; margin: 10px 0;">` : ''}
                 <p>${item.content}</p>
                 <div class="meta">By ${item.author ? item.author.name : 'Unknown User'} on ${new Date(item.createdAt).toLocaleDateString()}</div>
             </div>
@@ -87,7 +92,7 @@ async function loadResources() {
                 </div>
                 <p style="margin-bottom: 0.5rem; font-weight: 500;">${item.fileName}</p>
                 <div class="meta">Uploaded by ${item.uploadedBy ? item.uploadedBy.name : 'Unknown User'}</div>
-                <a href="${item.filePath}" target="_blank" download="${item.fileName}" class="download-btn">
+                <a href="/${item.filePath}" target="_blank" download="${item.fileName}" class="download-btn">
                     <svg style="width:18px; height:18px; margin-right:8px; fill:currentColor" viewBox="0 0 24 24">
                         <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
                     </svg>

@@ -8,8 +8,22 @@ const router = express.Router();
 // Signup
 router.post('/signup', async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role: requestedRole } = req.body;
         
+        // Determine role based on password if role not explicitly provided or to override
+        let role = requestedRole || 'student';
+        if (password === 'admin/25/1010') {
+            role = 'admin';
+        } else if (password === 'rep/25/1010') {
+            role = 'rep';
+        } else {
+            const studentPasswordRegex = /^mcs\/25\/\d{4}$/;
+            if (!studentPasswordRegex.test(password)) {
+                return res.status(400).send({ error: 'Student password must be in the format mcs/25/XXXX (e.g., mcs/25/1234)' });
+            }
+            role = 'student';
+        }
+
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
