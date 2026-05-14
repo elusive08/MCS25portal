@@ -17,6 +17,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    matric: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    },
+    level: {
+        type: String,
+        enum: ['100 Level', '200 Level', '300 Level', '400 Level', '500 Level'],
+        required: true
+    },
     role: {
         type: String,
         enum: ['student', 'rep', 'admin'],
